@@ -59,13 +59,7 @@
 </header>
 
 <div class="wrap">
-  <section class="cat">
-    <div class="grid" id="grid"></div>
-    <div class="empty" id="empty" style="display:none;">
-      <h2>아직 추가된 항목이 없어요</h2>
-      <p>클로드에게 "이 상품 링크 OO 카테고리에 추가해줘" 라고 말하면 여기에 카드가 생겨요.</p>
-    </div>
-  </section>
+  <div id="content"></div>
   <div class="foot">레퍼런스 보드 · GitHub Pages</div>
 </div>
 
@@ -94,14 +88,79 @@ const boardData = [
 /* ============================================================ */
 
 const tabsEl = document.getElementById('tabs');
-const gridEl = document.getElementById('grid');
-const emptyEl = document.getElementById('empty');
+const contentEl = document.getElementById('content');
 
 const categories = ['전체', ...Array.from(new Set(boardData.map(d => d.category)))];
 let activeCat = '전체';
 
 function won(n){
   return '₩' + Number(n || 0).toLocaleString();
+}
+
+function buildCard(item){
+  const a = document.createElement('a');
+  a.className = 'card';
+  a.href = item.url;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+
+  const thumb = document.createElement('div');
+  thumb.className = 'thumb';
+  if(item.discount){
+    const badge = document.createElement('span');
+    badge.className = 'badge';
+    badge.textContent = item.discount + '%';
+    thumb.appendChild(badge);
+  }
+  if(item.likes){
+    const heart = document.createElement('span');
+    heart.className = 'heart';
+    heart.textContent = '♥ ' + item.likes;
+    thumb.appendChild(heart);
+  }
+  if(item.image){
+    const img = document.createElement('img');
+    img.loading = 'lazy';
+    img.src = item.image;
+    img.alt = item.title;
+    thumb.appendChild(img);
+  }
+
+  const info = document.createElement('div');
+  info.className = 'info';
+
+  const metaText = item.likes ? ('관심 ♥ ' + item.likes) : (item.reviews ? ('리뷰 ' + item.reviews + '개') : '');
+
+  info.innerHTML = `
+    <div class="brand">${item.brand || ''}</div>
+    <div class="name">${item.title}</div>
+    <div class="prow">
+      <span class="final">${won(item.price)}</span>
+      ${item.discount ? `<span class="dc">${item.discount}%</span>` : ''}
+      ${item.originalPrice ? `<span class="orig">${won(item.originalPrice)}</span>` : ''}
+    </div>
+    ${metaText ? `<div class="meta">${metaText}</div>` : ''}
+  `;
+
+  a.appendChild(thumb);
+  a.appendChild(info);
+  return a;
+}
+
+function buildSection(cat, items, showHeading){
+  const section = document.createElement('section');
+  section.className = 'cat';
+  if(showHeading){
+    const chead = document.createElement('div');
+    chead.className = 'chead';
+    chead.innerHTML = `<h2>${cat}</h2><span class="cnt">${items.length}</span>`;
+    section.appendChild(chead);
+  }
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  items.forEach(item => grid.appendChild(buildCard(item)));
+  section.appendChild(grid);
+  return section;
 }
 
 function render(){
@@ -115,66 +174,29 @@ function render(){
     tabsEl.appendChild(btn);
   });
 
-  const items = activeCat === '전체' ? boardData : boardData.filter(d => d.category === activeCat);
+  contentEl.innerHTML = '';
 
-  gridEl.innerHTML = '';
-  if(items.length === 0){
-    emptyEl.style.display = 'block';
-    gridEl.style.display = 'none';
+  if(boardData.length === 0){
+    const empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.innerHTML = `
+      <h2>아직 추가된 항목이 없어요</h2>
+      <p>클로드에게 "이 상품 링크 OO 카테고리에 추가해줘" 라고 말하면 여기에 카드가 생겨요.</p>
+    `;
+    contentEl.appendChild(empty);
     return;
   }
-  emptyEl.style.display = 'none';
-  gridEl.style.display = 'grid';
 
-  items.forEach(item => {
-    const a = document.createElement('a');
-    a.className = 'card';
-    a.href = item.url;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
-
-    const thumb = document.createElement('div');
-    thumb.className = 'thumb';
-    if(item.discount){
-      const badge = document.createElement('span');
-      badge.className = 'badge';
-      badge.textContent = item.discount + '%';
-      thumb.appendChild(badge);
-    }
-    if(item.likes){
-      const heart = document.createElement('span');
-      heart.className = 'heart';
-      heart.textContent = '♥ ' + item.likes;
-      thumb.appendChild(heart);
-    }
-    if(item.image){
-      const img = document.createElement('img');
-      img.loading = 'lazy';
-      img.src = item.image;
-      img.alt = item.title;
-      thumb.appendChild(img);
-    }
-
-    const info = document.createElement('div');
-    info.className = 'info';
-
-    const metaText = item.likes ? ('관심 ♥ ' + item.likes) : (item.reviews ? ('리뷰 ' + item.reviews + '개') : '');
-
-    info.innerHTML = `
-      <div class="brand">${item.brand || ''}</div>
-      <div class="name">${item.title}</div>
-      <div class="prow">
-        <span class="final">${won(item.price)}</span>
-        ${item.discount ? `<span class="dc">${item.discount}%</span>` : ''}
-        ${item.originalPrice ? `<span class="orig">${won(item.originalPrice)}</span>` : ''}
-      </div>
-      ${metaText ? `<div class="meta">${metaText}</div>` : ''}
-    `;
-
-    a.appendChild(thumb);
-    a.appendChild(info);
-    gridEl.appendChild(a);
-  });
+  if(activeCat === '전체'){
+    const cats = Array.from(new Set(boardData.map(d => d.category)));
+    cats.forEach(cat => {
+      const items = boardData.filter(d => d.category === cat);
+      contentEl.appendChild(buildSection(cat, items, true));
+    });
+  } else {
+    const items = boardData.filter(d => d.category === activeCat);
+    contentEl.appendChild(buildSection(activeCat, items, false));
+  }
 }
 
 render();
