@@ -6,439 +6,116 @@
 <title>레퍼런스 보드</title>
 <style>
   :root{
-    --bg:#faf9f7;
-    --card-bg:#ffffff;
-    --text:#1f1d1a;
-    --sub:#8a8478;
-    --line:#e8e4dd;
-    --accent:#c98a4b;
-    --accent-bg:#fdf2e5;
+    --bg:#f4f2ee; --panel:#ffffff; --ink:#1c1a17; --sub:#8a8578; --line:#e5e1d8;
+    --accent:#b23b3b; --heart:#c9557f; --pill:#ffffff; --pillon:#1c1a17;
   }
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    padding:0;
-    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
-    background:var(--bg);
-    color:var(--text);
-  }
-  header{
-    padding:32px 20px 16px;
-    max-width:1100px;
-    margin:0 auto;
-  }
-  header h1{
-    font-size:22px;
-    margin:0 0 4px;
-    letter-spacing:-0.3px;
-  }
-  header p{
-    margin:0;
-    color:var(--sub);
-    font-size:13px;
-  }
-  .tabs{
-    max-width:1100px;
-    margin:0 auto;
-    padding:0 20px 20px;
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-  }
-  .tab{
-    border:1px solid var(--line);
-    background:var(--card-bg);
-    color:var(--text);
-    padding:7px 14px;
-    border-radius:999px;
-    font-size:13px;
-    cursor:pointer;
-    white-space:nowrap;
-  }
-  .tab.active{
-    background:var(--accent);
-    border-color:var(--accent);
-    color:#fff;
-  }
-  main{
-    max-width:1100px;
-    margin:0 auto;
-    padding:0 20px 60px;
-  }
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-    gap:16px;
-  }
-  .card{
-    background:var(--card-bg);
-    border:1px solid var(--line);
-    border-radius:14px;
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-    text-decoration:none;
-    color:inherit;
-    transition:transform .12s ease,box-shadow .12s ease;
-  }
-  .card:hover{
-    transform:translateY(-2px);
-    box-shadow:0 8px 20px rgba(0,0,0,.06);
-  }
-  .card .thumb{
-    width:100%;
-    aspect-ratio:3/4;
-    background:var(--accent-bg) center/cover no-repeat;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:var(--accent);
-    font-size:13px;
-  }
-  .card .body{
-    padding:12px 14px 14px;
-  }
-  .card .cat{
-    display:inline-block;
-    font-size:11px;
-    color:var(--accent);
-    background:var(--accent-bg);
-    padding:2px 8px;
-    border-radius:6px;
-    margin-bottom:6px;
-  }
-  .card .title{
-    font-size:14px;
-    font-weight:600;
-    margin:0 0 4px;
-    line-height:1.35;
-  }
-  .card .memo{
-    font-size:12px;
-    color:var(--sub);
-    margin:0;
-    line-height:1.4;
-  }
-  .empty{
-    text-align:center;
-    padding:80px 20px;
-    color:var(--sub);
-  }
-  .empty h2{
-    font-size:16px;
-    color:var(--text);
-    margin:0 0 8px;
-  }
-  .empty p{
-    font-size:13px;
-    margin:0;
-  }
-  footer{
-    text-align:center;
-    padding:24px;
-    color:var(--sub);
-    font-size:11px;
-  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Apple SD Gothic Neo','Malgun Gothic',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 22px 80px}
+  header.top{position:sticky;top:0;z-index:20;background:rgba(244,242,238,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .hd{max-width:1280px;margin:0 auto;padding:16px 22px 12px}
+  .htitle{font-size:20px;font-weight:800;letter-spacing:-.01em}
+  .hsub{font-size:12px;color:var(--sub);margin-top:3px}
+  .nav{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+  .pill{font-size:12.5px;font-weight:700;padding:7px 13px;border:1px solid var(--line);border-radius:999px;background:var(--pill);color:#55514a;cursor:pointer;transition:.13s;white-space:nowrap}
+  .pill:hover{border-color:#b8b2a5}
+  .pill.on{background:var(--pillon);color:#fff;border-color:var(--pillon)}
+  section.cat{padding-top:26px}
+  .chead{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
+  .chead h2{font-size:17px;font-weight:800;margin:0;letter-spacing:-.01em}
+  .chead .cnt{font-size:12px;color:var(--sub)}
+  .cnote{font-size:12px;color:var(--sub);margin:0 0 15px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(186px,1fr));gap:16px 15px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:.14s;cursor:pointer}
+  .card:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(40,34,26,.13);border-color:#d8d2c6}
+  .thumb{position:relative;width:100%;aspect-ratio:3/4;background:#eceae4;overflow:hidden}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .badge{position:absolute;left:9px;top:9px;background:rgba(28,26,23,.82);color:#fff;font-size:10.5px;font-weight:700;padding:3px 7px;border-radius:6px;letter-spacing:.02em}
+  .heart{position:absolute;right:8px;top:8px;background:rgba(255,255,255,.9);color:var(--heart);font-size:11px;font-weight:700;padding:3px 7px;border-radius:999px}
+  .info{padding:11px 12px 13px}
+  .brand{font-size:11px;font-weight:800;color:#8a8578;letter-spacing:.03em;text-transform:uppercase;margin-bottom:3px}
+  .name{font-size:12.5px;line-height:1.35;font-weight:600;color:#2a2823;height:34px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .prow{display:flex;align-items:baseline;gap:6px;margin-top:8px;flex-wrap:wrap}
+  .final{font-size:14px;font-weight:800}
+  .dc{font-size:12px;font-weight:800;color:var(--accent)}
+  .orig{font-size:11px;color:#b3ada0;text-decoration:line-through}
+  .meta{font-size:11px;color:var(--sub);margin-top:6px}
+  .empty{text-align:center;padding:80px 20px;color:var(--sub)}
+  .empty h2{font-size:16px;color:var(--ink);margin:0 0 8px}
+  .empty p{font-size:13px;margin:0}
+  .foot{text-align:center;color:var(--sub);font-size:11.5px;margin-top:50px;line-height:1.7}
+  @media(max-width:640px){.grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:13px 11px}.htitle{font-size:17px}}
 </style>
 </head>
 <body>
 
-<header>
-  <h1>레퍼런스 보드</h1>
-  <p id="count-label">참고 상품 링크 모음</p>
+<header class="top">
+  <div class="hd">
+    <div class="htitle">레퍼런스 보드</div>
+    <div class="hsub">아이템별 정렬 · 카드 클릭 시 상품 상세페이지로 이동 · 관심수(♥)·가격은 등록 시점 기준</div>
+    <div class="nav" id="tabs"></div>
+  </div>
 </header>
 
-<div class="tabs" id="tabs"></div>
-
-<main>
-  <div class="grid" id="grid"></div>
-  <div class="empty" id="empty" style="display:none;">
-    <h2>아직 추가된 항목이 없어요</h2>
-    <p>클로드에게 "이 상품 링크 OO 카테고리에 추가해줘" 라고 말하면 여기에 카드가 생겨요.</p>
-  </div>
-</main>
-
-<footer>레퍼런스 보드 · GitHub Pages</footer>
+<div class="wrap">
+  <section class="cat">
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" style="display:none;">
+      <h2>아직 추가된 항목이 없어요</h2>
+      <p>클로드에게 "이 상품 링크 OO 카테고리에 추가해줘" 라고 말하면 여기에 카드가 생겨요.</p>
+    </div>
+  </section>
+  <div class="foot">레퍼런스 보드 · GitHub Pages</div>
+</div>
 
 <script>
 /* ============================================================
    여기에 데이터를 추가/수정합니다.
    category: 카테고리 이름 (탭으로 표시됨)
+   brand: 브랜드명
    title: 상품/레퍼런스 이름
    url: 링크 (클릭 시 새 탭으로 이동)
    image: 썸네일 이미지 URL (없으면 빈 문자열 "")
+   price: 최종 판매가 (숫자, 쿠폰가 등 실제 결제가 기준)
+   originalPrice: 정상가 (숫자, 할인 없으면 0 또는 생략)
+   discount: 할인율 (숫자, %, 할인 없으면 0 또는 생략)
+   likes: 관심/찜 수 (문자열, 사이트에 없으면 빈 문자열 "")
+   reviews: 리뷰 수 (숫자, likes가 없을 때 대신 표시됨)
    memo: 짧은 메모 (선택, 없으면 빈 문자열 "")
    ============================================================ */
 const boardData = [
-  { category: "티셔츠", title: "[오제 PICK] 에센셜 라운드넥 반팔 티셔츠 MDTS073_10 Colors", url: "https://www.29cm.co.kr/products/3185392", image: "https://img.29cm.co.kr/item/202603/11f128cfe3e36d419454f55a8a0462c2.jpg", memo: "" },
-  { category: "탑", title: "WOOL TENCEL LONG SLEEVE T-SHIRT_BEIGE [LW263TS02BE]", url: "https://www.29cm.co.kr/products/4125659", image: "https://img.29cm.co.kr/item/202608/11f195704c08161a8fdcbd097013d57c.jpg", memo: "" },
-  { category: "긴팔셔츠", title: "[리엘][5th] Bail overfit shirt (red check)", url: "https://www.wconcept.co.kr/Product/308303345", image: "https://product-image.wconcept.co.kr/productimg/image/img2/45/308303345_AE21915.jpg", memo: "" },
-  { category: "반팔셔츠", title: "[무니드]PEARL HALF SHIRT - CREAM", url: "https://www.wconcept.co.kr/Product/308574545", image: "https://product-image.wconcept.co.kr/productimg/image/img2/45/308574545_DH89023.jpg", memo: "" },
-  { category: "스커트", title: "[무니드]MELT MAXI SKIRT - CHARCOAL", url: "https://www.wconcept.co.kr/Product/308283747", image: "https://product-image.wconcept.co.kr/productimg/image/img2/47/308283747_UO30713.jpg", memo: "" },
+  { category: "티셔츠", brand: "몽돌", title: "[오제 PICK] 에센셜 라운드넥 반팔 티셔츠 MDTS073_10 Colors", url: "https://www.29cm.co.kr/products/3185392", image: "https://img.29cm.co.kr/item/202603/11f128cfe3e36d419454f55a8a0462c2.jpg", price: 20720, originalPrice: 37000, discount: 44, likes: "3.3만", reviews: 0, memo: "" },
+  { category: "♑", brand: "로우클래식", title: "WOOL TENCEL LONG SLEEVE T-SHIRT_BEIGE [LW263TS02BE]", url: "https://www.29cm.co.kr/products/4125659", image: "https://img.29cm.co.kr/item/202608/11f195704c08161a8fdcbd097013d57c.jpg", price: 84150, originalPrice: 99000, discount: 15, likes: "572", reviews: 0, memo: "" },
+  { category: "긴팔셔츠", brand: "리엘", title: "[5th] Bail overfit shirt (red check)", url: "https://www.wconcept.co.kr/Product/308303345", image: "https://product-image.wconcept.co.kr/productimg/image/img2/45/308303345_AE21915.jpg", price: 93296, originalPrice: 140000, discount: 33, likes: "", reviews: 89, memo: "" },
+  { category: "반팔셔츠", brand: "무니드", title: "PEARL HALF SHIRT - CREAM", url: "https://www.wconcept.co.kr/Product/308574545", image: "https://product-image.wconcept.co.kr/productimg/image/img2/45/308574545_DH89023.jpg", price: 87494, originalPrice: 124000, discount: 29, likes: "", reviews: 198, memo: "" },
+  { category: "스커트", brand: "무니드", title: "MELT MAXI SKIRT - CHARCOAL", url: "https://www.wconcept.co.kr/Product/308283747", image: "https://product-image.wconcept.co.kr/productimg/image/img2/47/308283747_UO30713.jpg", price: 71440, originalPrice: 94000, discount: 24, likes: "", reviews: 174, memo: "" },
 ];
 /* ============================================================ */
 
 const tabsEl = document.getElementById('tabs');
 const gridEl = document.getElementById('grid');
 const emptyEl = document.getElementById('empty');
-const countLabel = document.getElementById('count-label');
 
 const categories = ['전체', ...Array.from(new Set(boardData.map(d => d.category)))];
 let activeCat = '전체';
 
-function render(){
-  tabsEl.innerHTML = '';
-  categories.forEach(cat => {
-    const btn = document.createElement('button');
-    btn.className = 'tab' + (cat === activeCat ? ' active' : '');
-    btn.textContent = cat;
-    btn.onclick = () => { activeCat = cat; render(); };
-    tabsEl.appendChild(btn);
-  });
-
-  const items = activeCat === '전체' ? boardData : boardData.filter(d => d.category === activeCat);
-  countLabel.textContent = `총 ${boardData.length}개 · ${activeCat} ${items.length}개`;
-
-  gridEl.innerHTML = '';
-  if(items.length === 0){
-    emptyEl.style.display = 'block';
-    gridEl.style.display = 'none';
-    return;
-  }
-  emptyEl.style.display = 'none';
-  gridEl.style.display = 'grid';
-
-  items.forEach(item => {
-    const a = document.createElement('a');
-    a.className = 'card';
-    a.href = item.url;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
-
-    const thumb = document.createElement('div');
-    thumb.className = 'thumb';
-    if(item.image){
-      thumb.style.backgroundImage = `url('${item.image}')`;
-    } else {
-      thumb.textContent = '이미지 없음';
-    }
-
-    const body = document.createElement('div');
-    body.className = 'body';
-    body.innerHTML = `
-      <span class="cat">${item.category}</span>
-      <p class="title">${item.title}</p>
-      ${item.memo ? `<p class="memo">${item.memo}</p>` : ''}
-    `;
-
-    a.appendChild(thumb);
-    a.appendChild(body);
-    gridEl.appendChild(a);
-  });
+function won(n){
+  return '₩' + Number(n || 0).toLocaleString();
 }
 
-render();
-</script>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>레퍼런스 보드</title>
-<style>
-  :root{
-    --bg:#faf9f7;
-    --card-bg:#ffffff;
-    --text:#1f1d1a;
-    --sub:#8a8478;
-    --line:#e8e4dd;
-    --accent:#c98a4b;
-    --accent-bg:#fdf2e5;
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    padding:0;
-    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
-    background:var(--bg);
-    color:var(--text);
-  }
-  header{
-    padding:32px 20px 16px;
-    max-width:1100px;
-    margin:0 auto;
-  }
-  header h1{
-    font-size:22px;
-    margin:0 0 4px;
-    letter-spacing:-0.3px;
-  }
-  header p{
-    margin:0;
-    color:var(--sub);
-    font-size:13px;
-  }
-  .tabs{
-    max-width:1100px;
-    margin:0 auto;
-    padding:0 20px 20px;
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-  }
-  .tab{
-    border:1px solid var(--line);
-    background:var(--card-bg);
-    color:var(--text);
-    padding:7px 14px;
-    border-radius:999px;
-    font-size:13px;
-    cursor:pointer;
-    white-space:nowrap;
-  }
-  .tab.active{
-    background:var(--accent);
-    border-color:var(--accent);
-    color:#fff;
-  }
-  main{
-    max-width:1100px;
-    margin:0 auto;
-    padding:0 20px 60px;
-  }
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-    gap:16px;
-  }
-  .card{
-    background:var(--card-bg);
-    border:1px solid var(--line);
-    border-radius:14px;
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-    text-decoration:none;
-    color:inherit;
-    transition:transform .12s ease,box-shadow .12s ease;
-  }
-  .card:hover{
-    transform:translateY(-2px);
-    box-shadow:0 8px 20px rgba(0,0,0,.06);
-  }
-  .card .thumb{
-    width:100%;
-    aspect-ratio:3/4;
-    background:var(--accent-bg) center/cover no-repeat;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:var(--accent);
-    font-size:13px;
-  }
-  .card .body{
-    padding:12px 14px 14px;
-  }
-  .card .cat{
-    display:inline-block;
-    font-size:11px;
-    color:var(--accent);
-    background:var(--accent-bg);
-    padding:2px 8px;
-    border-radius:6px;
-    margin-bottom:6px;
-  }
-  .card .title{
-    font-size:14px;
-    font-weight:600;
-    margin:0 0 4px;
-    line-height:1.35;
-  }
-  .card .memo{
-    font-size:12px;
-    color:var(--sub);
-    margin:0;
-    line-height:1.4;
-  }
-  .empty{
-    text-align:center;
-    padding:80px 20px;
-    color:var(--sub);
-  }
-  .empty h2{
-    font-size:16px;
-    color:var(--text);
-    margin:0 0 8px;
-  }
-  .empty p{
-    font-size:13px;
-    margin:0;
-  }
-  footer{
-    text-align:center;
-    padding:24px;
-    color:var(--sub);
-    font-size:11px;
-  }
-</style>
-</head>
-<body>
-
-<header>
-  <h1>레퍼런스 보드</h1>
-  <p id="count-label">참고 상품 링크 모음</p>
-</header>
-
-<div class="tabs" id="tabs"></div>
-
-<main>
-  <div class="grid" id="grid"></div>
-  <div class="empty" id="empty" style="display:none;">
-    <h2>아직 추가된 항목이 없어요</h2>
-    <p>클로드에게 "이 상품 링크 OO 카테고리에 추가해줘" 라고 말하면 여기에 카드가 생겨요.</p>
-  </div>
-</main>
-
-<footer>레퍼런스 보드 · GitHub Pages</footer>
-
-<script>
-/* ============================================================
-   여기에 데이터를 추가/수정합니다.
-   category: 카테고리 이름 (탭으로 표시됨)
-   title: 상품/레퍼런스 이름
-   url: 링크 (클릭 시 새 탭으로 이동)
-   image: 썸네일 이미지 URL (없으면 빈 문자열 "")
-   memo: 짧은 메모 (선택, 없으면 빈 문자열 "")
-   ============================================================ */
-const boardData = [
-  // 예시:
-  // { category: "봄여름 니트", title: "리브 니트 가디건", url: "https://example.com", image: "", memo: "소매 디테일 참고" },
-];
-/* ============================================================ */
-
-const tabsEl = document.getElementById('tabs');
-const gridEl = document.getElementById('grid');
-const emptyEl = document.getElementById('empty');
-const countLabel = document.getElementById('count-label');
-
-const categories = ['전체', ...Array.from(new Set(boardData.map(d => d.category)))];
-let activeCat = '전체';
-
 function render(){
   tabsEl.innerHTML = '';
   categories.forEach(cat => {
+    const cnt = cat === '전체' ? boardData.length : boardData.filter(d => d.category === cat).length;
     const btn = document.createElement('button');
-    btn.className = 'tab' + (cat === activeCat ? ' active' : '');
-    btn.textContent = cat;
+    btn.className = 'pill' + (cat === activeCat ? ' on' : '');
+    btn.textContent = cat + ' ' + cnt;
     btn.onclick = () => { activeCat = cat; render(); };
     tabsEl.appendChild(btn);
   });
 
   const items = activeCat === '전체' ? boardData : boardData.filter(d => d.category === activeCat);
-  countLabel.textContent = `총 ${boardData.length}개 · ${activeCat} ${items.length}개`;
 
   gridEl.innerHTML = '';
   if(items.length === 0){
@@ -458,22 +135,44 @@ function render(){
 
     const thumb = document.createElement('div');
     thumb.className = 'thumb';
+    if(item.discount){
+      const badge = document.createElement('span');
+      badge.className = 'badge';
+      badge.textContent = item.discount + '%';
+      thumb.appendChild(badge);
+    }
+    if(item.likes){
+      const heart = document.createElement('span');
+      heart.className = 'heart';
+      heart.textContent = '♥ ' + item.likes;
+      thumb.appendChild(heart);
+    }
     if(item.image){
-      thumb.style.backgroundImage = `url('${item.image}')`;
-    } else {
-      thumb.textContent = '이미지 없음';
+      const img = document.createElement('img');
+      img.loading = 'lazy';
+      img.src = item.image;
+      img.alt = item.title;
+      thumb.appendChild(img);
     }
 
-    const body = document.createElement('div');
-    body.className = 'body';
-    body.innerHTML = `
-      <span class="cat">${item.category}</span>
-      <p class="title">${item.title}</p>
-      ${item.memo ? `<p class="memo">${item.memo}</p>` : ''}
+    const info = document.createElement('div');
+    info.className = 'info';
+
+    const metaText = item.likes ? ('관심 ♥ ' + item.likes) : (item.reviews ? ('리뷰 ' + item.reviews + '개') : '');
+
+    info.innerHTML = `
+      <div class="brand">${item.brand || ''}</div>
+      <div class="name">${item.title}</div>
+      <div class="prow">
+        <span class="final">${won(item.price)}</span>
+        ${item.discount ? `<span class="dc">${item.discount}%</span>` : ''}
+        ${item.originalPrice ? `<span class="orig">${won(item.originalPrice)}</span>` : ''}
+      </div>
+      ${metaText ? `<div class="meta">${metaText}</div>` : ''}
     `;
 
     a.appendChild(thumb);
-    a.appendChild(body);
+    a.appendChild(info);
     gridEl.appendChild(a);
   });
 }
