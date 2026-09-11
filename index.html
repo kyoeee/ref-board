@@ -26,8 +26,8 @@
   .pill.on{background:var(--pillon);color:#fff;border-color:var(--pillon)}
   section.cat{padding-top:30px}
   .chead{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-  .chead h2{font-family:'Jua',cursive;font-size:20px;font-weight:400;margin:0;color:var(--ink);letter-spacing:-.01em}
-  .chead .cnt{font-size:11.5px;font-weight:700;color:var(--ink);background:var(--chip);padding:3px 10px;border-radius:999px}
+  .chead h2, .mbhead h2{font-family:'Jua',cursive;font-size:20px;font-weight:400;margin:0;color:var(--ink);letter-spacing:-.01em}
+  .cnt{font-size:11.5px;font-weight:700;color:var(--ink);background:var(--chip);padding:3px 10px;border-radius:999px}
   .cnote{font-size:12px;color:var(--sub);margin:0 0 15px}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(186px,1fr));gap:16px 15px}
   .card{background:var(--panel);border:1.5px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:.14s;cursor:pointer}
@@ -48,7 +48,23 @@
   .empty h2{font-family:'Jua',cursive;font-weight:400;font-size:19px;color:var(--ink);margin:0 0 8px}
   .empty p{font-size:13px;margin:0}
   .foot{text-align:center;color:var(--ink);font-size:11.5px;margin-top:56px;line-height:1.7;background:var(--chip);padding:16px;border-radius:16px}
-  @media(max-width:640px){.grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:13px 11px}.htitle{font-size:21px}}
+  .moodboard{padding-bottom:8px;margin-bottom:6px;border-bottom:2px dashed var(--chip)}
+  .mbhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+  .mbtitle{display:flex;align-items:center;gap:10px}
+  .mbupload{font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:700;padding:8px 14px;border:none;border-radius:999px;background:var(--pillon);color:#fff;cursor:pointer;transition:.13s}
+  .mbupload:hover{background:var(--accent)}
+  .mbwrap{position:relative}
+  .mbrow{display:flex;gap:14px;overflow-x:auto;scroll-behavior:smooth;padding:4px 2px 16px;scrollbar-width:none}
+  .mbrow::-webkit-scrollbar{display:none}
+  .mbcard{position:relative;flex:0 0 auto;width:190px;aspect-ratio:3/4;border-radius:18px;overflow:hidden;background:#f2e9e2;border:1.5px solid var(--line)}
+  .mbcard img{width:100%;height:100%;object-fit:cover;display:block}
+  .mbdel{position:absolute;right:6px;top:6px;width:22px;height:22px;border-radius:50%;background:rgba(28,58,94,.72);color:#fff;border:none;font-size:13px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+  .mbempty{flex:0 0 auto;width:190px;aspect-ratio:3/4;border-radius:18px;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;color:var(--sub);font-size:12px;text-align:center;padding:14px}
+  .mbarrow{position:absolute;top:50%;right:8px;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;background:#fff;border:1.5px solid var(--chip);box-shadow:0 6px 16px rgba(28,58,94,.16);cursor:pointer;font-size:17px;color:var(--ink);display:flex;align-items:center;justify-content:center;z-index:2;padding:0}
+  .mbarrow:hover{border-color:var(--accent);color:var(--accent)}
+  .mbarrow.left{right:auto;left:8px}
+  .mbarrow[hidden]{display:none}
+  @media(max-width:640px){.grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:13px 11px}.htitle{font-size:21px}.mbcard,.mbempty{width:140px}}
 </style>
 </head>
 <body>
@@ -163,6 +179,168 @@ function buildCard(item){
   return a;
 }
 
+/* ===================== 무드보드 (이미지 업로드형 캐러셀) =====================
+   전체 탭 상단에만 노출됩니다. 사이트가 정적 호스팅이라 서버 저장은 불가하므로,
+   업로드한 이미지는 이 브라우저(이 컴퓨터)의 localStorage에만 저장됩니다.
+   즉 회의 중 그 자리에서 바로 이미지를 올려 훑어보는 용도이며,
+   다른 기기/브라우저에는 자동으로 동기화되지 않습니다. */
+const MB_KEY = 'refboard_moodboard_v1';
+
+function loadMoodboard(){
+  try{ return JSON.parse(localStorage.getItem(MB_KEY) || '[]'); }
+  catch(e){ return []; }
+}
+function saveMoodboard(list){
+  try{ localStorage.setItem(MB_KEY, JSON.stringify(list)); }
+  catch(e){ alert('이미지 저장 공간이 가득 찼어요. 몇 개 삭제한 뒤 다시 시도해주세요.'); }
+}
+let moodboardImages = loadMoodboard();
+
+function resizeImageFile(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const maxDim = 1400;
+        let { width, height } = img;
+        if(width > maxDim || height > maxDim){
+          if(width > height){ height = Math.round(height * (maxDim / width)); width = maxDim; }
+          else { width = Math.round(width * (maxDim / height)); height = maxDim; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', 0.82));
+      };
+      img.onerror = reject;
+      img.src = reader.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function addMoodboardFiles(fileList){
+  const files = Array.from(fileList || []).filter(f => f.type && f.type.startsWith('image/'));
+  if(files.length === 0) return;
+  Promise.all(files.map(resizeImageFile)).then(dataUrls => {
+    dataUrls.forEach(src => {
+      moodboardImages.push({ id: Date.now() + '_' + Math.random().toString(36).slice(2, 8), src });
+    });
+    saveMoodboard(moodboardImages);
+    renderMoodboardRow();
+  }).catch(() => alert('이미지를 불러오는 중 문제가 발생했어요.'));
+}
+
+function removeMoodboardImage(id){
+  moodboardImages = moodboardImages.filter(m => m.id !== id);
+  saveMoodboard(moodboardImages);
+  renderMoodboardRow();
+}
+
+function updateMoodboardArrows(){
+  const row = document.getElementById('mbRow');
+  const left = document.getElementById('mbLeft');
+  const right = document.getElementById('mbRight');
+  if(!row || !left || !right) return;
+  left.hidden = row.scrollLeft <= 4;
+  right.hidden = row.scrollLeft + row.clientWidth >= row.scrollWidth - 4;
+}
+
+function renderMoodboardRow(){
+  const row = document.getElementById('mbRow');
+  const cnt = document.getElementById('mbCnt');
+  if(!row) return;
+  if(cnt) cnt.textContent = moodboardImages.length;
+  row.innerHTML = '';
+  if(moodboardImages.length === 0){
+    const empty = document.createElement('div');
+    empty.className = 'mbempty';
+    empty.textContent = '+ 버튼으로 이미지를 올려보세요';
+    row.appendChild(empty);
+  } else {
+    moodboardImages.forEach(m => {
+      const card = document.createElement('div');
+      card.className = 'mbcard';
+      const img = document.createElement('img');
+      img.loading = 'lazy';
+      img.src = m.src;
+      card.appendChild(img);
+      const del = document.createElement('button');
+      del.className = 'mbdel';
+      del.textContent = '×';
+      del.title = '삭제';
+      del.onclick = (e) => { e.stopPropagation(); removeMoodboardImage(m.id); };
+      card.appendChild(del);
+      row.appendChild(card);
+    });
+  }
+  updateMoodboardArrows();
+}
+
+function buildMoodboard(){
+  const section = document.createElement('section');
+  section.className = 'moodboard';
+
+  const head = document.createElement('div');
+  head.className = 'mbhead';
+
+  const titleWrap = document.createElement('div');
+  titleWrap.className = 'mbtitle';
+  titleWrap.innerHTML = `<h2>무드보드</h2><span class="cnt" id="mbCnt">${moodboardImages.length}</span>`;
+  head.appendChild(titleWrap);
+
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = 'image/*';
+  fileInput.multiple = true;
+  fileInput.hidden = true;
+  fileInput.onchange = (e) => { addMoodboardFiles(e.target.files); fileInput.value = ''; };
+
+  const uploadBtn = document.createElement('button');
+  uploadBtn.className = 'mbupload';
+  uploadBtn.type = 'button';
+  uploadBtn.textContent = '+ 이미지 업로드';
+  uploadBtn.onclick = () => fileInput.click();
+
+  head.appendChild(uploadBtn);
+  head.appendChild(fileInput);
+  section.appendChild(head);
+
+  const mbwrap = document.createElement('div');
+  mbwrap.className = 'mbwrap';
+
+  const row = document.createElement('div');
+  row.className = 'mbrow';
+  row.id = 'mbRow';
+  row.onscroll = updateMoodboardArrows;
+
+  const leftBtn = document.createElement('button');
+  leftBtn.className = 'mbarrow left';
+  leftBtn.id = 'mbLeft';
+  leftBtn.type = 'button';
+  leftBtn.innerHTML = '&#8249;';
+  leftBtn.hidden = true;
+  leftBtn.onclick = () => row.scrollBy({ left: -420, behavior: 'smooth' });
+
+  const rightBtn = document.createElement('button');
+  rightBtn.className = 'mbarrow';
+  rightBtn.id = 'mbRight';
+  rightBtn.type = 'button';
+  rightBtn.innerHTML = '&#8250;';
+  rightBtn.onclick = () => row.scrollBy({ left: 420, behavior: 'smooth' });
+
+  mbwrap.appendChild(row);
+  mbwrap.appendChild(leftBtn);
+  mbwrap.appendChild(rightBtn);
+  section.appendChild(mbwrap);
+
+  setTimeout(renderMoodboardRow, 0);
+  return section;
+}
+/* ============================================================ */
+
 function buildSection(cat, items, showHeading){
   const section = document.createElement('section');
   section.className = 'cat';
@@ -191,6 +369,10 @@ function render(){
   });
 
   contentEl.innerHTML = '';
+
+  if(activeCat === '전체'){
+    contentEl.appendChild(buildMoodboard());
+  }
 
   if(boardData.length === 0){
     const empty = document.createElement('div');
