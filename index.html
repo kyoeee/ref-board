@@ -366,7 +366,36 @@ function render(){
   }
 }
 
-render();
+const STATUS_API = 'https://api.jsonstorage.net/v1/json/c6048033-1c46-45a0-8eb6-7f866da9c917/78f8647f-dd33-4283-bf2b-9b4fb20ad7c3';
+const STATUS_API_KEY = '8857592a-2e27-41d3-b101-50e5d08c210e';
+let statusData = {};
+
+async function loadStatusData(){
+  try{
+    const res = await fetch(STATUS_API + '?t=' + Date.now(), {cache:'no-store'});
+    if(res.ok){ statusData = await res.json() || {}; }
+  }catch(e){}
+}
+
+async function saveStatusKey(key, val){
+  try{
+    const res = await fetch(STATUS_API + '?t=' + Date.now(), {cache:'no-store'});
+    if(res.ok){ statusData = await res.json() || {}; }
+  }catch(e){}
+  statusData[key] = val;
+  try{
+    await fetch(STATUS_API + '?apiKey=' + STATUS_API_KEY, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(statusData)
+    });
+  }catch(e){}
+}
+
+(async function initApp(){
+  await loadStatusData();
+  render();
+})();
 </script>
 
 </body>
